@@ -1,0 +1,23 @@
+{
+  "name": "rest_api_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "npx nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dinhcuongnd2001/Nodejs_Rest_API.git"
+  },
+  "author": "dnc_cuong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dinhcuongnd2001/Nodejs_Rest_API/issues"
+  },
+  "homepage": "https://github.com/dinhcuongnd2001/Nodejs_Rest_API#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
