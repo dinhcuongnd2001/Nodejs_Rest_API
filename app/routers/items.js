@@ -5,25 +5,50 @@ const { v4: uuidv4 } = require("uuid");
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
 
-router.get("/", (req, res, next) => {
-  res.send("Get all Item");
+router.get("/", async (req, res, next) => {
+  try {
+    const data = await MainModel.listItem({}, { task: "all" });
+    res.status(201).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 });
 
-router.get("/:id", (req, res, next) => {
-  res.send("Get one item with id: " + req.params.id);
+router.get("/:id", async (req, res, next) => {
+  try {
+    const data = await MainModel.listItem(
+      { id: req.params.id },
+      { task: "one" }
+    );
+    res.status(201).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 });
 
 router.post("/add", async (req, res, next) => {
-  let params = [];
-  params.id = makeId();
-  params.name = req.body.name;
-  params.status = req.body.status;
-  const data = await MainModel.create(params);
-  res.status(201).json({
-    success: true,
-    notice: "them thanh cong",
-    data: data,
-  });
+  try {
+    let params = [];
+    params.id = makeId();
+    params.name = req.body.name;
+    params.status = req.body.status;
+    const data = await MainModel.create(params);
+    res.status(201).json({
+      success: true,
+      notice: "them thanh cong",
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+    });
+  }
 });
 
 router.put("/edit/:id", (req, res, next) => {
