@@ -51,12 +51,36 @@ router.post("/add", async (req, res, next) => {
   }
 });
 
-router.put("/edit/:id", (req, res, next) => {
-  res.send("edit item with id = " + req.params.id);
+router.put("/edit/:id", async (req, res, next) => {
+  try {
+    const data = await MainModel.editItem(req.params, req.body, {
+      task: "edit",
+    });
+    res.status(200).json({
+      success: true,
+      notice: "Update thanh cong",
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+    });
+  }
 });
 
-router.delete("/delete/:id", (req, res, next) => {
-  res.send("delete item with id = " + req.params.id);
+router.delete("/delete/:id", async (req, res, next) => {
+  try {
+    const data = await MainModel.deleteItem(req.params, { task: "one" });
+    res.status(200).json({
+      success: true,
+      notice: "Xoa thanh cong",
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+    });
+  }
 });
 
 module.exports = router;
