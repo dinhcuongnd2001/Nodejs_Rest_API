@@ -1,102 +1,37 @@
-// const http = require("http");
-
-// const course = [
-//   {
-//     id: 1,
-//     name: "nodeJs",
-//   },
-//   {
-//     id: 2,
-//     name: "ReactJs",
-//   },
-// ];
-
-// const server = http.createServer((req, res) => {
-//   // res.setHeader("Content-type", "application/json");
-//   // res.setHeader("X-Powered-By", "Node.js");
-
-//   // res.statusCode = 404;
-
-//   res.writeHead(404, {
-//     "Content-type": "application/json",
-//     "X-Powered-By": "Node.js",
-//   });
-//   res.end(
-//     JSON.stringify({
-//       success: false,
-//       error: "Not Found",
-//       data: null,
-//     })
-//   );
-// });
-
-// const PORT = 3055;
-// server.listen(PORT, () => {
-//   console.log(`server is running on port ${PORT}`);
-// });
-
 const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-let courses = [
-  {
-    id: 1,
-    name: "nodeJs",
-  },
-  {
-    id: 2,
-    name: "ReactJs",
-  },
-];
+const pathConfig = require("./path");
+global.__base = __dirname + "/";
+global.__path_app = __base + pathConfig.folder_app + "/";
 
-app.get("/", (req, res) => {
-  res.send(courses);
-});
+global.__path_schemas = __path_app + pathConfig.folder_schemas + "/";
+global.__path_models = __path_app + pathConfig.folder_models + "/";
+global.__path_routers = __path_app + pathConfig.folder_routers + "/";
+global.__path_configs = __path_app + pathConfig.folder_configs + "/";
 
-app.get("/api/course/:id", (req, res) => {
-  // res.send(course);
-  const course = courses.find((each) => each.id == req.params.id);
-  if (!course) res.status(404).send("No Course Found");
-  else res.send(course);
-});
+const systemConfig = require(__path_configs + "system");
+const databaseConfig = require(__path_configs + "database");
 
-app.post("/api/course/add", (req, res) => {
-  const newCourse = req.body;
-  courses.push(newCourse);
+mongoose
+  .connect(
+    `mongodb+srv://${databaseConfig.username}:${databaseConfig.password}@${databaseConfig.database}.wsuf679.mongodb.net/?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    console.log("Database Connecting");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
-  res.send(
-    JSON.stringify({
-      success: true,
-      notice: " You have add successfully",
-      data: courses,
-    })
-  );
-});
+// setup Router
 
-app.put("/api/course/edit/:id", (req, res) => {
-  const course = courses.find((each) => each.id == req.params.id);
-  course.name = req.body.name;
-  res.send(
-    JSON.stringify({
-      success: true,
-      notice: " You have edit successfully",
-      data: courses,
-    })
-  );
-});
-
-app.delete("/api/course/delete/:id", (req, res) => {
-  courses = courses.filter((each) => each.id != req.params.id);
-  res.send(
-    JSON.stringify({
-      success: true,
-      notice: "You have delete successfully",
-      data: courses,
-    })
-  );
-});
+app.use("/api/v1", require(__path_routers));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
