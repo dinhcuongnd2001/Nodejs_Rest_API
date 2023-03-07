@@ -53,9 +53,11 @@ router.post("/add", async (req, res, next) => {
 
 router.put("/edit/:id", async (req, res, next) => {
   try {
+    console.log(req.params.id);
     const data = await MainModel.editItem(req.params, req.body, {
       task: "edit",
     });
+
     res.status(200).json({
       success: true,
       notice: "Update thanh cong",
