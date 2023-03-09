@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const morgan = require("morgan");
+const errorHandler = require("./app/middleware/error");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(morgan("dev"));
 
 const pathConfig = require("./path");
 global.__base = __dirname + "/";
@@ -32,6 +36,9 @@ mongoose
 // setup Router
 
 app.use("/api/v1", require(__path_routers));
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
+
+// error hanlder
+
+app.use(errorHandler);

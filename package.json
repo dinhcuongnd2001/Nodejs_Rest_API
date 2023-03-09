@@ -19,6 +19,7 @@
   "homepage": "https://github.com/dinhcuongnd2001/Nodejs_Rest_API#readme",
   "devDependencies": {
     "cors": "^2.8.5",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
