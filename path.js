@@ -4,5 +4,5 @@ module.exports = {
   folder_routers: "routers",
   folder_models: "models",
   folder_schemas: "schemas",
-  folder_validate: "validates",
+  folder_validate: "validate",
 };

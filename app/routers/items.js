@@ -3,7 +3,12 @@ var router = express.Router();
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
+const MainValidate = require(__path_validate + controllerName);
+const { validateData } = require("../middleware/validate");
+const { body, validationResult } = require("express-validator");
+
 const asyncHandler = require("../middleware/async");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 router.get(
   "/",
@@ -36,11 +41,10 @@ router.get(
 
 router.post(
   "/add",
+  MainValidate.CreateValidator(),
+  validateData,
   asyncHandler(async (req, res, next) => {
-    let params = [];
-    params.name = req.body.name;
-    params.status = req.body.status;
-    const data = await MainModel.create(params);
+    const data = await MainModel.create(req.body);
     res.status(201).json({
       success: true,
       notice: "them thanh cong",
@@ -51,6 +55,8 @@ router.post(
 
 router.put(
   "/edit/:id",
+  MainValidate.EditValidator(),
+  validateData,
   asyncHandler(async (req, res, next) => {
     console.log(req.params.id);
     const data = await MainModel.editItem(req.params, req.body, {

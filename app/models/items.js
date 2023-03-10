@@ -15,10 +15,10 @@ module.exports = {
       }
       if (params.status) condition["status"] = params.status;
       if (params.order) sort["name"] = params.order;
-      return MainSchemas.find(condition).select("id name status").sort(sort);
+      return MainSchemas.find(condition).select("id name email").sort(sort);
     }
     if (option.task == "one") {
-      return MainSchemas.findById(params.id).select("id name status");
+      return MainSchemas.findById(params.id).select("id name email");
     }
   },
 
