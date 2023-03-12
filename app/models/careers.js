@@ -18,7 +18,7 @@ module.exports = {
       return MainSchemas.find(condition).select("id name title").sort(sort);
     }
     if (option.task == "one") {
-      return MainSchemas.findById(params.id).select("id name title");
+      return MainSchemas.findById(params.id);
     }
   },
 
@@ -31,6 +31,14 @@ module.exports = {
   deleteItem: (params, option) => {
     if (option.task == "one") {
       return MainSchemas.deleteOne({ _id: params.id });
+    }
+  },
+  event: (params, data, option) => {
+    if (option.task == "like") {
+      return MainSchemas.updateOne({ _id: params.id }, { like: data });
+    }
+    if (option.task == "dislike") {
+      return MainSchemas.updateOne({ _id: params.id }, { dislike: data });
     }
   },
 };
