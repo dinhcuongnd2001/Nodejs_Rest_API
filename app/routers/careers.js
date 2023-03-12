@@ -9,15 +9,18 @@ const MainValidate = require(__path_validate + controllerName);
 const { validateData } = require("../middleware/validate");
 
 const asyncHandler = require("../middleware/async");
-const ErrorResponse = require("../utils/ErrorResponse");
+const _ = require("lodash");
 
 router.get(
   "/",
   asyncHandler(async (req, res, next) => {
     const data = await MainModel.listItem(req.query, { task: "all" });
+    const result = data.map((each) =>
+      MainHandle.getFields(each, ["_id", "name", "restaurants"])
+    );
     res.status(201).json({
       success: true,
-      data: data,
+      data: result,
     });
   })
 );
@@ -68,59 +71,21 @@ router.put(
 );
 
 router.put(
-  "/like/:id",
+  "/event/:type/:id",
   asyncHandler(async (req, res, next) => {
-    const data = await MainModel.listItem(
-      { id: req.params.id },
-      { task: "one" }
-    );
-    const career = await MainModel.event(req.params, data.like + 1, {
-      task: "like",
-    });
-
-    const updateCareer = await MainModel.listItem(
-      { id: req.params.id },
-      { task: "one" }
-    );
+    const career = await MainModel.event(req.params);
 
     res.status(200).json({
       message: "success",
-      metaData: MainHandle.getFields(updateCareer, [
-        "id",
-        "name",
-        "title",
-        "like",
-      ]),
-    });
-  })
-);
-
-router.put(
-  "/dislike/:id",
-  asyncHandler(async (req, res, next) => {
-    const data = await MainModel.listItem(
-      { id: req.params.id },
-      { task: "one" }
-    );
-    const dislike = data.dislike + 1;
-    const career = await MainModel.event(req.params, dislike, {
-      task: "dislike",
-    });
-
-    const updateCareer = await MainModel.listItem(
-      { id: req.params.id },
-      { task: "one" }
-    );
-
-    res.status(200).json({
-      message: "success",
-      metaData: MainHandle.getFields(updateCareer, [
-        "id",
-        "name",
-        "title",
-        "like",
-        "dislike",
-      ]),
+      metaData: _.isObject(career)
+        ? MainHandle.getFields(career, [
+            "_id",
+            "name",
+            "title",
+            "like",
+            "dislike",
+          ])
+        : career,
     });
   })
 );

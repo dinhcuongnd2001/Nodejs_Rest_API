@@ -4,7 +4,13 @@ const databaseConfig = require(__path_configs + "database");
 var schema = new mongoose.Schema({
   name: String,
   description: String,
-  careers: [String],
+  careers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "careers",
+      required: true,
+    },
+  ],
   Type: [String],
   Local: [String],
   web: String,

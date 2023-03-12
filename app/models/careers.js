@@ -10,12 +10,13 @@ module.exports = {
       let condition = {};
       let sort = {};
       if (params.keySearch) {
-        // condition["name"] = { $regex: `${params.keySearch}`, $options: i };
         condition["name"] = params.keySearch;
       }
       if (params.status) condition["status"] = params.status;
       if (params.order) sort["name"] = params.order;
-      return MainSchemas.find(condition).select("id name title").sort(sort);
+      return MainSchemas.find(condition)
+        .populate({ path: "restaurants", select: "name" })
+        .sort(sort);
     }
     if (option.task == "one") {
       return MainSchemas.findById(params.id);
@@ -33,12 +34,14 @@ module.exports = {
       return MainSchemas.deleteOne({ _id: params.id });
     }
   },
-  event: (params, data, option) => {
-    if (option.task == "like") {
-      return MainSchemas.updateOne({ _id: params.id }, { like: data });
-    }
-    if (option.task == "dislike") {
-      return MainSchemas.updateOne({ _id: params.id }, { dislike: data });
-    }
+  event: (params) => {
+    console.log(params.type);
+    if (params.type != "like" || params.type != "dislike")
+      return "Type not valid";
+    return MainSchemas.findByIdAndUpdate(
+      params.id,
+      { $inc: { [params.type]: 1 } },
+      { new: true }
+    );
   },
 };

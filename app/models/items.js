@@ -10,15 +10,14 @@ module.exports = {
       let condition = {};
       let sort = {};
       if (params.keySearch) {
-        // condition["name"] = { $regex: `${params.keySearch}`, $options: i };
         condition["name"] = params.keySearch;
       }
       if (params.status) condition["status"] = params.status;
       if (params.order) sort["name"] = params.order;
-      return MainSchemas.find(condition).select("id name email").sort(sort);
+      return MainSchemas.find(condition).sort(sort);
     }
     if (option.task == "one") {
-      return MainSchemas.findById(params.id).select("id name email");
+      return MainSchemas.findById(params.id);
     }
   },
 

@@ -8,7 +8,7 @@ const { validateData } = require("../middleware/validate");
 const { body, validationResult } = require("express-validator");
 
 const asyncHandler = require("../middleware/async");
-const ErrorResponse = require("../utils/ErrorResponse");
+const MainHandle = require("../utils/HandleObject");
 
 router.get(
   "/",
@@ -18,9 +18,12 @@ router.get(
     if (req.query.keySearch) param["keySearch"] = req.query.keySearch;
     if (req.query.status) param["status"] = req.query.status;
     const data = await MainModel.listItem(param, { task: "all" });
+    const result = data.map((each) =>
+      MainHandle.getFields(each, ["_id", "name", "email", "careers"])
+    );
     res.status(201).json({
       success: true,
-      data: data,
+      metaData: result,
     });
   })
 );
@@ -34,7 +37,7 @@ router.get(
     );
     res.status(201).json({
       success: true,
-      data: data,
+      data: MainHandle.getFields(data, ["_id", "name", "email", "careers"]),
     });
   })
 );
@@ -58,7 +61,6 @@ router.put(
   MainValidate.EditValidator(),
   validateData,
   asyncHandler(async (req, res, next) => {
-    console.log(req.params.id);
     const data = await MainModel.editItem(req.params, req.body, {
       task: "edit",
     });
