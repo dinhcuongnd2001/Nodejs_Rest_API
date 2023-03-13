@@ -19,4 +19,4 @@ schema.virtual("restaurants", {
 schema.set("toObject", { virtuals: true });
 schema.set("toJSON", { virtuals: true });
 
-module.exports = mongoose.model(databaseConfig.col_items[1], schema);
+module.exports = mongoose.model(databaseConfig.col_careers, schema);

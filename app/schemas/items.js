@@ -19,4 +19,4 @@ var schema = new mongoose.Schema({
   email: String,
 });
 
-module.exports = mongoose.model(databaseConfig.col_items[0], schema);
+module.exports = mongoose.model(databaseConfig.col_items, schema);
