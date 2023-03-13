@@ -1,5 +1,5 @@
 const { body, validationResult } = require("express-validator");
-const ItemSchema = require("../schemas/items");
+const ItemSchema = require("../schemas/users");
 
 module.exports = {
   CreateValidator: () => [
