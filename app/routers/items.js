@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const protect = require("../middleware/auth");
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
@@ -58,6 +59,7 @@ router.post(
 
 router.put(
   "/edit/:id",
+  protect,
   MainValidate.EditValidator(),
   validateData,
   asyncHandler(async (req, res, next) => {
