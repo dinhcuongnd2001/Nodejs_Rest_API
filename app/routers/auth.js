@@ -7,6 +7,7 @@ const RegisterValidate = require(__path_validate + "auth.register");
 const LoginValidate = require(__path_validate + "auth.login");
 
 const { validateData } = require("../middleware/validate");
+const { protect } = require("../middleware/auth");
 const { body, validationResult } = require("express-validator");
 
 const asyncHandler = require("../middleware/async");
@@ -32,9 +33,19 @@ router.post(
   validateData,
   asyncHandler(async (req, res, next) => {
     const { statusCode, ...rest } = await MainModel.login(req.body);
-    console.log(rest);
     res.status(statusCode).json({
       ...rest,
+    });
+  })
+);
+
+router.get(
+  "/me",
+  protect,
+  asyncHandler(async (req, res, next) => {
+    res.status(200).json({
+      success: "true",
+      user: req.user,
     });
   })
 );

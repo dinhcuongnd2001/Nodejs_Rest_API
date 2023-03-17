@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const protect = require("../middleware/auth");
+const { protect, authorize } = require("../middleware/auth");
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
@@ -45,6 +45,8 @@ router.get(
 
 router.post(
   "/add",
+  protect,
+  authorize("publish", "user"),
   MainValidate.CreateValidator(),
   validateData,
   asyncHandler(async (req, res, next) => {
